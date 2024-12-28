@@ -103,8 +103,9 @@ export const faultInjectionHw = async (ip,
             const faultTime = runCommand("date '+%b %d %H:%M:%S'");
             if (faultTime) logMessage(`${C1} Fault ${TIME} ${faultTime}`);
 
-            const sshCommand = `sshpass -p '${sshPassword}' ssh ${sshUsername}@${ip} "rtcwake -m mem -s ${TIMER}"`;
+            const sshCommand = `sshpass -p '${sshPassword}' ssh -tt ${sshUsername}@${ip} -o StrictHostKeyChecking=no PasswordAuthentication=yes "echo '${sshPassword}' | sudo -S rtcwake -m mem -s ${TIMER}"`;
             const sshResult = runCommand(sshCommand);
+            
             if (sshResult === null) {
                 console.error(`Erro ao executar SSH no ciclo ${C1}`);
                 logMessage(`${C1} ERRO: Falha no SSH`);
