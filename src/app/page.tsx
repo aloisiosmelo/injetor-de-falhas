@@ -5,13 +5,15 @@ import { Flex, Select, Input, Button, Heading, Toast, InlineCode } from '@/once-
 
 export default function Home() {
 
+	type LogMessageType = Array<{ message: string }>;
+
 	const [injectionType, setInjectionType] = useState<string>('')
 	const [sshUsername, setSSHUsername] = useState<string>('')
 	const [sshPassword, setSSHPassword] = useState<string>('')
 	const [ip, setIp] = useState<string>('')
 	const [loading, setLoading] = useState<boolean>(false)
 	const [showToast, setShowToast] = useState<boolean>(false)
-	const [logMenssages, setLogMessages] = useState<[]>();
+	const [logMenssages, setLogMessages] = useState<LogMessageType>();
 
 	const callAPI = async () => {
 		const payload = {
@@ -47,13 +49,13 @@ export default function Home() {
 
 				fetchData();
 
-				// const interval = setInterval(() => {
-				// 	fetchData();
-				// }, 1000);
+				const interval = setInterval(() => {
+					fetchData();
+				}, 1000);
 
-				// setTimeout(() => {
-				// 	clearInterval(interval);
-				// }, 50000);
+				setTimeout(() => {
+					clearInterval(interval);
+				}, 50000);
 
 			}
 		} catch (err) {
@@ -134,11 +136,12 @@ export default function Home() {
 			/>
 			<Flex
 				fillWidth paddingTop="l" paddingX="l"
+				marginBottom='l'
 				direction="column" alignItems="center" flex={1}
 			>
 				{logMenssages && logMenssages.length > 0 && (
-					<InlineCode style={{width:'100%', backgroundColor: 'black'}}>
-						{logMenssages.map((log) => <p style={{color:'white'}}>{log.message}</p>)}
+					<InlineCode style={{ width: '100%', backgroundColor: 'black' }}>
+						{logMenssages.map((log) => <p style={{ color: 'white' }}>{log?.message}</p>)}
 					</InlineCode>
 				)}
 			</Flex>

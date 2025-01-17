@@ -19,9 +19,10 @@ Ambiente de execução: `Linux` (foi testado apenas no Ubuntu 24.04.1)<br>
 Pra rodar os scripts do projeto precisamos instalar alguns pacotes abaixo:<br>
 
 ```
-sudo apt-get install node
+sudo apt-get install nodejs
+sudo apt-get install npm
 sudo apt-get install sshpass 
-sudo apt-get install littler 
+sudo apt-get install littler
 ```
 
 ## **Instruções de execução/instalação local**
