@@ -1,45 +1,35 @@
 {
-	"name": "@once-ui-system/nextjs-starter",
-	"version": "0.4.1",
-	"scripts": {
-		"dev": "next dev",
-		"export": "next export",
-		"build": "next build",
-		"start": "next start",
-		"lint": "next lint"
-	},
-	"dependencies": {
-		"@floating-ui/react-dom": "^2.1.1",
-		"@fridgerator/r-script": "^0.1.7",
-		"classnames": "^2.5.1",
-		"compressorjs": "^1.2.1",
-		"db-local": "^3.1.0",
-		"js-cookie": "^3.0.5",
-		"jsonwebtoken": "^9.0.2",
-		"next": "^14.2.4",
-		"node-json-db": "^2.3.0",
-		"postcss": "^8.4.39",
-		"postcss-preset-env": "^9.5.15",
-		"prismjs": "^1.29.0",
-		"r-script": "^0.0.4",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"react-icons": "^5.2.1",
-		"react-text-mask": "^5.5.0",
-		"sass": "^1.77.6",
-		"sharp": "^0.33.4",
-		"simple-json-db": "^2.0.0",
-		"sqlite": "^5.1.1",
-		"sqlite3": "^5.1.7"
-	},
-	"devDependencies": {
-		"@csstools/postcss-global-data": "^2.1.1",
-		"@types/node": "^20",
-		"@types/react": "^18",
-		"@types/react-dom": "^18",
-		"@types/react-text-mask": "^5.4.14",
-		"postcss-custom-media": "^10.0.7",
-		"postcss-flexbugs-fixes": "^5.0.2",
-		"typescript": "^5"
-	}
+  "name": "front-end-injetor-de-falhas",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "format": "prettier --check --ignore-path .gitignore .",
+    "format:fix": "prettier --write --ignore-path .gitignore .",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-input/mask": "^2.0.4",
+    "axios": "^1.7.9",
+    "net-ping": "^1.2.4",
+    "next": "15.1.7",
+    "ping": "^0.4.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-input-mask": "^2.0.4"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.7",
+    "eslint-config-prettier": "^10.0.1",
+    "moment": "^2.30.1",
+    "postcss": "^8",
+    "prettier": "2.8.8",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "react-json-to-csv": "^1.2.0",
+    "tailwindcss": "^3.4.1"
+  }
 }
