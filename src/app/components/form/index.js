@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import injectorLogo from '../../../../public/fault_injector_logo.png'
 import Image from 'next/image';
 import Loading from '../loading';
-import * as moment from 'moment'
 import CsvDownloadButton from 'react-json-to-csv'
 
 const Form = () => {
@@ -23,10 +22,6 @@ const Form = () => {
     const [loading, setLoading] = useState(false);
 
     const isEmpty = (str) => (str === '' || str == undefined || str == null) ? true : false;
-
-    const generateHour = () => {
-        return `${moment().format('hh:mm:ss')}`;
-    }
 
     const showErrorMsg = (msg) => {
         setShowError(true);
@@ -94,7 +89,7 @@ const Form = () => {
 
     return (
         <div className="bg-gray-100 p-0 sm:p-12">
-            <div className="mx-auto max-w-md px-6 py-12 bg-white border-0 shadow-lg sm:rounded-3xl mb-2">
+            <div className="mx-auto max-w-md px-6 py-12 bg-white border-0 shadow-lg rounded-3xl mb-2">
                 <div className="flex flex-row mx-0 mb-4">
                     <Image
                         src={injectorLogo}
