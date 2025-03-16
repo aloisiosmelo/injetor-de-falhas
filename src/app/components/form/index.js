@@ -17,17 +17,10 @@ const Form = () => {
     const [timeToFail, setTimeToFail] = useState('');
     const [timeToRepair, setTimeToRepair] = useState('');
     const [experimentAttempts, setExperimentAttempts] = useState('');
-    const [logQueueTTF, setLogQueueTTF] = useState([]);
-    const [logQueueTTR, setLogQueueTTR] = useState([]);
-
+    const [logMsg, setLogMsg] = useState([]);
     const [showError, setShowError] = useState(false);
     const [showErrorText, setShowErrorText] = useState('');
-
     const [loading, setLoading] = useState(false);
-
-    const delay = millis => new Promise((resolve, reject) => {
-        setTimeout(_ => resolve(), millis)
-    });
 
     const isEmpty = (str) => (str === '' || str == undefined || str == null) ? true : false;
 
@@ -45,11 +38,6 @@ const Form = () => {
         }, 5000);
     }
 
-    const pingServer = async (ip, setLogCallback) => await fetch(`${process.env.NEXT_PUBLIC_PING_API_ROUTE}${ip}`, {
-        method: "GET",
-        'Access-Control-Allow-Origin': '*'
-    }).then((resp) => resp.json()).then((data) => data?.server_status === true ? setLogCallback(prevArray => [...prevArray, generateHour() + ' - up. ']) : setLogCallback(prevArray => [...prevArray, generateHour() + ' - down. ']))
-
     const handleOnSubmit = async () => {
         if (isEmpty(ip) || isEmpty(sshUsername) || isEmpty(sshPassword)
             || isEmpty(autoDetectNetworkInterfaceId) || isEmpty(injectionType) || isEmpty(timeToFail)
@@ -58,9 +46,15 @@ const Form = () => {
         } else {
             setLoading(true);
             try {
-                const response = await fetch(process.env.NEXT_PUBLIC_INJECTOR_API_ROUTE, {
-                    method: "POST",
-                    body: JSON.stringify({
+
+                const webSocket = new WebSocket(process.env.NEXT_PUBLIC_INJECTOR_API_WS_ROUTE);
+
+                webSocket.onclose = () => {
+                    setLoading(false);
+                };
+
+                webSocket.onopen = () => {
+                    webSocket.send(JSON.stringify({
                         ip,
                         sshPassword,
                         sshUsername,
@@ -70,45 +64,24 @@ const Form = () => {
                         autoDetectNetworkInterfaceId,
                         networkInterfaceId,
                         injectionType,
-                    }),
-                    headers: {
-                        "Content-Type": "application/json",
-                        'Access-Control-Allow-Origin': '*'
-                    },
-                })
+                    }));
+                };
 
-                const { data } = await response.json()
+                webSocket.onmessage = async (event) => {
+                    if (event.data) {
+                        const data = JSON.parse(event.data);
 
-                if (data?.status === "error") {
-                    setLoading(false);
-                    return showErrorMsg(data.error);
-                }
+                        if (data?.status === "error") {
+                            setLoading(false);
+                            return showErrorMsg(data.message);
+                        }
 
-                if (data?.time_to_fail) {
-                    setLogQueueTTF(prevArray => [...prevArray, 'Time to fail']);
-                    setLogQueueTTF(prevArray => [...prevArray, moment(data?.time_to_fail).format('DD-MM-YYYY - hh:mm:ss')]);
-                    setLogQueueTTF(prevArray => [...prevArray, 'Waiting to start']);
+                        if (data?.status === "ok") {
+                            setLogMsg((a) => [...a, data.message]);
+                        }
 
-                    await delay(moment(data?.time_to_fail).format('ss') * 1000);
-                    setLogQueueTTF(prevArray => [...prevArray, 'Time to fail Schedule Started']);
-
-                    setInterval(() => {
-                        pingServer(ip, setLogQueueTTF);
-                    }, 5000);
-                }
-
-                if (data?.time_to_repair) {
-                    setLogQueueTTR(prevArray => [...prevArray, 'Time to repair']);
-                    setLogQueueTTR(prevArray => [...prevArray, moment(data?.time_to_repair).format('DD-MM-YYYY - hh:mm:ss')]);
-                    setLogQueueTTR(prevArray => [...prevArray, 'Waiting to start']);
-
-                    await delay(moment(data?.time_to_repair).format('ss') * 1000);
-                    setLogQueueTTR(prevArray => [...prevArray, 'Time to fail Schedule Started']);
-
-                    setInterval(() => {
-                        pingServer(ip, setLogQueueTTR);
-                    }, 5000);
-                }
+                    }
+                };
 
             } catch (error) {
                 console.log(error)
@@ -137,20 +110,13 @@ const Form = () => {
                         {showErrorText}
                     </div>)}
 
-                {logQueueTTF && logQueueTTF.length > 0 &&
-                    (<div className="bg-black text-white min-h-2 my-4 p-4 rounded-lg transition-all duration-150 ease-linear flex flex-col h-full max-h-48 overflow-y-auto overflow-anchor-auto">
-                        {logQueueTTF.map((log, index) => <small key={index}> {log} </small>)}
-                    </div>)}
-
-                {logQueueTTR && logQueueTTR.length > 0 &&
-                    (<div className="bg-black text-white min-h-2 my-4 p-4 rounded-lg transition-all duration-150 ease-linear flex flex-col h-full max-h-48 overflow-y-auto overflow-anchor-auto">
-                        {logQueueTTR.map((log, index) => <small key={index}> {log} </small>)}
-                    </div>)}
-
-                {logQueueTTR && logQueueTTR.length > 0 && logQueueTTF && logQueueTTF.length > 0 && (
-                    <div className="flex flex-row mx-0 mb-4">
+                {logMsg.length > 0 && (
+                    <div className="flex flex-col mx-0 mb-4">
+                        <div className="bg-black text-white min-h-2 my-4 p-4 rounded-lg transition-all duration-150 ease-linear flex flex-col h-full max-h-48 overflow-y-auto overflow-anchor-auto">
+                            {logMsg.map((log, index) => (<small key={index}>{log}</small>))}
+                        </div>
                         <CsvDownloadButton
-                            data={[logQueueTTR, logQueueTTF]}
+                            data={[logMsg]}
                             filename="ttr_log.csv"
                             className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-neutral-400 hover:bg-neutral-600 hover:shadow-lg focus:outline-none">
                             Download Log
@@ -158,7 +124,7 @@ const Form = () => {
                     </div>
                 )}
 
-                {logQueueTTF.length === 0 && logQueueTTR.length === 0 && (<form id="form" noValidate className="bg-gray-100 p-4 rounded-lg">
+                <form id="form" noValidate className="bg-gray-100 p-4 rounded-lg">
                     <div className="relative z-0 w-full mb-5">
                         <input
                             type="text"
@@ -310,7 +276,7 @@ const Form = () => {
                         {loading ? <Loading /> : 'Inject'}
                     </button>
 
-                </form>)}
+                </form>
             </div>
         </div>
 
