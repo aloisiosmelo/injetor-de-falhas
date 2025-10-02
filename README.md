@@ -31,6 +31,15 @@ npm install
 npm run dev 
 ```
 
+## **Para rodar o backend**
+
+```
+
+cd backend
+npm install
+npm run dev 
+```
+
 ## **Autores**
 Aloisio Soares
 

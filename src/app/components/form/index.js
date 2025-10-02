@@ -4,6 +4,7 @@ import injectorLogo from '../../../../public/fault_injector_logo.png'
 import Image from 'next/image';
 import Loading from '../loading';
 import CsvDownloadButton from 'react-json-to-csv'
+import { LABELS } from '@/app/constants'
 
 const Form = () => {
 
@@ -89,15 +90,14 @@ const Form = () => {
 
     return (
         <div className="bg-gray-100 p-0 sm:p-12">
-            <div className="mx-auto max-w-md px-6 py-12 bg-white border-0 shadow-lg rounded-3xl mb-2">
-                <div className="flex flex-row mx-0 mb-4">
+            <div className="mx-auto max-w-md px-6 py-2 bg-white border-0 shadow-lg rounded-3xl mb-2">
+                <div className="flex flex-row mx-0 mb-4 mt-4">
                     <Image
                         src={injectorLogo}
-                        width={80}
-                        height={80}
+                        height={120}
                         alt="Fault Injector App Logo"
                     />
-                    <h1 className="text-2xl font-bold mb-8 text-center mt-4">Fault Injector App</h1>
+                    <h1 className="text-2xl font-bold mb-8 text-center mt-4 text-black">{LABELS.app_title}</h1>
                 </div>
 
                 {showError &&
@@ -114,7 +114,7 @@ const Form = () => {
                             data={[logMsg]}
                             filename="ttr_log.csv"
                             className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-neutral-400 hover:bg-neutral-600 hover:shadow-lg focus:outline-none">
-                            Download Log
+                            {LABELS.form_download_log}
                         </CsvDownloadButton>
                     </div>
                 )}
@@ -131,7 +131,7 @@ const Form = () => {
                             onChange={e => setIp(e.target.value)}
                             className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                         />
-                        <label htmlFor="name" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">IP</label>
+                        <label htmlFor="ip" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">IP</label>
                         <span className="text-sm text-red-600 hidden" id="error">IP is required</span>
                     </div>
 
@@ -146,7 +146,7 @@ const Form = () => {
                             placeholder=" "
                             className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                         />
-                        <label htmlFor="sshUsername" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">SSH Username</label>
+                        <label htmlFor="sshUsername" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">{LABELS.form_ssh_username}</label>
                         <span className="text-sm text-red-600 hidden" id="error">SSH Username is required</span>
                     </div>
 
@@ -156,15 +156,16 @@ const Form = () => {
                             onChange={e => setSshPassword(e.target.value)}
                             type="password"
                             name="sshPassword"
+                            id="sshPassword"
                             placeholder=" "
                             className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                         />
-                        <label htmlFor="sshPassword" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Enter SSH Password</label>
+                        <label htmlFor="sshPassword" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">{LABELS.form_ssh_password}</label>
                         <span className="text-sm text-red-600 hidden" id="error">SSH Password is required</span>
                     </div>
 
                     <fieldset className="relative z-0 w-full p-px mb-5">
-                        <legend className="absolute text-gray-500 transform scale-75 -top-3 origin-0">Autodetect network interface</legend>
+                        <legend className="absolute text-gray-600 transform scale-75 -top-3 origin-0">{LABELS.form_autodetect_network_interface}</legend>
                         <div className="block pt-3 pb-2 space-x-4">
                             <label>
                                 <input
@@ -175,7 +176,7 @@ const Form = () => {
                                     defaultChecked={autoDetectNetworkInterfaceId}
                                     className="mr-2 text-black border-2 border-gray-300 focus:border-gray-300 focus:ring-black"
                                 />
-                                Yes
+                                {LABELS.form_yes}
                             </label>
                             <label>
                                 <input
@@ -185,7 +186,7 @@ const Form = () => {
                                     defaultValue={false}
                                     className="mr-2 text-black border-2 border-gray-300 focus:border-gray-300 focus:ring-black"
                                 />
-                                No
+                                {LABELS.form_no}
                             </label>
                         </div>
                         <span className="text-sm text-red-600 hidden" id="error">Autodetect network interface has to be selected</span>
@@ -196,12 +197,13 @@ const Form = () => {
                             <input
                                 type="text"
                                 name="networkInterfaceId"
+                                id="networkInterfaceId"
                                 value={networkInterfaceId}
                                 onChange={e => setNetworkInterfaceId(e.target.value)}
                                 placeholder=" "
                                 className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                             />
-                            <label htmlFor="networkInterfaceId" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Network Interface Identifier</label>
+                            <label htmlFor="networkInterfaceId" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">{LABELS.form_network_interface_id}</label>
                             <span className="text-sm text-red-600 hidden" id="error">Network Interface Identifier</span>
                         </div>
                     )}
@@ -209,13 +211,14 @@ const Form = () => {
                     <div className="relative z-0 w-full mb-5">
                         <select
                             name="injectionType"
+                            id="injectionType"
                             defaultValue={injectionType}
                             onChange={e => setInjectionType(e.target.value)}
                             className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                         >
                             <option defaultValue="Hardware" disabled hidden>Hardware</option>
                         </select>
-                        <label htmlFor="select" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Injection Type</label>
+                        <label htmlFor="injectionType" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">{LABELS.form_injection_type}</label>
                         <span className="text-sm text-red-600 hidden" id="error">Option has to be selected</span>
                     </div>
 
@@ -226,11 +229,12 @@ const Form = () => {
                                 onChange={e => setTimeToFail(e.target.value)}
                                 type="text"
                                 name="timeToFail"
+                                id="timeToFail"
                                 placeholder=" "
                                 className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                             />
-                            <div className="absolute top-0 right-0 mt-3 mr-4 text-gray-400">min</div>
-                            <label htmlFor="timeToFail" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">TTF</label>
+                            <div className="absolute top-0 right-0 mt-3 mr-4 text-gray-600">min</div>
+                            <label htmlFor="timeToFail" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">{LABELS.form_time_to_failure}</label>
                             <span className="text-sm text-red-600 hidden" id="error">TTF is required</span>
                         </div>
                         <div className="relative z-0 w-full">
@@ -239,11 +243,12 @@ const Form = () => {
                                 onChange={e => setTimeToRepair(e.target.value)}
                                 type="text"
                                 name="timeToRepair"
+                                id="timeToRepair"
                                 placeholder=" "
                                 className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                             />
-                            <div className="absolute top-0 right-0 mt-3 mr-4 text-gray-400">min</div>
-                            <label htmlFor="timeToRepair" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">TTR</label>
+                            <div className="absolute top-0 right-0 mt-3 mr-4 text-gray-600">min</div>
+                            <label htmlFor="timeToRepair" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-600">{LABELS.form_time_to_repair}</label>
                             <span className="text-sm text-red-600 hidden" id="error">Time To Repair is required</span>
                         </div>
                     </div>
@@ -254,11 +259,12 @@ const Form = () => {
                             onChange={e => setExperimentAttempts(e.target.value)}
                             type="number"
                             name="experimentAttempts"
+                            id="experimentAttempts"
                             placeholder=" "
                             className="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                         />
-                        <div className="absolute top-0 right-0 mt-3 mr-4 text-gray-400">attempts</div>
-                        <label htmlFor="experimentAttempts" className="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">Experiment Attempts</label>
+                        <div className="absolute top-0 right-0 mt-3 mr-4 text-gray-600">{LABELS.form_attempts}</div>
+                        <label htmlFor="experimentAttempts" className="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-600">{LABELS.form_experiment_attempts}</label>
                         <span className="text-sm text-red-600 hidden" id="error">Attempts is required</span>
                     </div>
 
@@ -268,7 +274,7 @@ const Form = () => {
                         className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-red-600 hover:bg-red-800 hover:shadow-lg focus:outline-none"
                         onClick={handleOnSubmit}
                     >
-                        {loading ? <Loading /> : 'Inject'}
+                        {loading ? <Loading /> : LABELS.form_inject}
                     </button>
 
                 </form>
